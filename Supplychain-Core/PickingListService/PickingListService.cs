@@ -1,6 +1,8 @@
-﻿using Supplychain_Core.Requests;
+﻿using Microsoft.EntityFrameworkCore;
+using Supplychain_Core.Requests;
 using Supplychain_Data.Models;
 using Supplychain_Data.SystemContext;
+using System.Linq;
 
 namespace Supplychain_Core.PickingListService
 {
@@ -47,6 +49,44 @@ namespace Supplychain_Core.PickingListService
             }
             _context.SaveChanges();
             return newPickingList.Sequence;
+        }
+
+        public void UpdatePickingList(UpdatePickingListRequest request)
+        {
+            var sequance = request.Sequence;
+            var pickingList = _context.PickingLists
+                .FirstOrDefault(f=>f.Sequence == sequance);
+            if (pickingList == null) return;
+            var warehouseId = pickingList.WarehouseId;
+            var pickingListItems = _context.pickingListItems
+                .Where(p => p.PickingListId == pickingList.Id).ToList();
+
+            var itemIds = request.ItemsSolds.Select(i => i.ItemId).ToList();
+
+
+            var warehousesItems = _context.WarehouseItems
+                .Where(e=> e.WarehouseId == warehouseId && itemIds.Contains(e.ItemId)).ToList();   
+     
+
+            foreach (var itemRequest in request.ItemsSolds)
+            {
+                var updatePickingList = pickingListItems.FirstOrDefault(p=>p.ItemId == itemRequest.ItemId);
+                if (updatePickingList != null)
+                {
+                    updatePickingList.Quantity = itemRequest.Quantity;
+                }
+
+                var updateWarehouseItem = warehousesItems.FirstOrDefault(p => p.ItemId == itemRequest.ItemId);
+                if(updateWarehouseItem != null)
+                {
+                    updateWarehouseItem.Quantity -= itemRequest.Quantity;
+                }
+
+                _context.WarehouseItems.UpdateRange(warehousesItems);
+                _context.pickingListItems.UpdateRange(pickingListItems);    
+            }
+            _context.SaveChanges(); 
+
         }
         private static string GenerateRandomSequence()
         {

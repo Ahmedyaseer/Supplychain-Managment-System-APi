@@ -1,4 +1,5 @@
-﻿using Supplychain_Core.Requests;
+﻿using Microsoft.EntityFrameworkCore;
+using Supplychain_Core.Requests;
 using Supplychain_Data.Models;
 using Supplychain_Data.SystemContext;
 
@@ -69,6 +70,43 @@ namespace Supplychain_Core.OrderSupplyService
             _context.SaveChanges();
 
             return newOrderSupply.Sequence;
+        }
+
+        public string UpdateOrderSupply(UpdateOrderSupplyRequest request)
+        {
+            var sequence = request.Sequence;
+            var orderSupply = _context.OrderSupply
+                .FirstOrDefault(f => f.Sequence == sequence);
+
+            if (orderSupply == null)
+                return "unsuccessful update";
+
+            var orderSupplyId = orderSupply.Id;
+
+            var warehouseId = orderSupply.WarehouseId;
+
+            var orderSupplyWithItems = _context.OrderSupplyItems
+                .Where(osi => osi.OrderSupplyId == orderSupplyId).ToList();
+
+            var itemsIds = request.Items.Select(r=>r.ItemId).ToList();
+
+            var warehouseItems = _context.WarehouseItems
+                .Where(w=>w.WarehouseId == warehouseId && itemsIds.Contains(w.ItemId))
+                .ToList();
+
+            foreach (var itemRequest in request.Items) 
+            {
+               var updateOrderSupply = orderSupplyWithItems.FirstOrDefault(f=>f.ItemId == itemRequest.ItemId);
+                if (updateOrderSupply != null)
+                    updateOrderSupply.Quantity = itemRequest.Quantity;
+                var updateWarehouseItems = warehouseItems.FirstOrDefault(f => f.ItemId == itemRequest.ItemId);
+                if(updateWarehouseItems != null)
+                    updateWarehouseItems.Quantity = itemRequest.Quantity;
+                _context.WarehouseItems.UpdateRange(warehouseItems);
+                _context.OrderSupplyItems.UpdateRange(orderSupplyWithItems);
+            } 
+            _context.SaveChanges();
+            return "updated";
         }
 
         private static string GenerateRandomSequence()
