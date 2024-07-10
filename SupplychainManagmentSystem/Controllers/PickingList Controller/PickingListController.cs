@@ -23,5 +23,12 @@ namespace Supplychain_Api.Controllers.PickingList_Controller
                 return NotFound();  
             return Ok(newPickingList);
         }
+
+        [HttpPut]
+        public IActionResult UpdatePickingList(UpdatePickingListRequest request)
+        {
+            _service.UpdatePickingList(request);
+            return Ok();
+        }
     }
 }

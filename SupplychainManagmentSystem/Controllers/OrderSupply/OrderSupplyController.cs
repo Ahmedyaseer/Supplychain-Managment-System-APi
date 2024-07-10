@@ -21,8 +21,16 @@ namespace Supplychain_Api.Controllers.OrderSupply
         {
             var newOrderSupplySequnce = _service.AddNewOrderSupply(request);
             if (newOrderSupplySequnce == null) 
-                return NotFound();  
+                return BadRequest();  
             return Ok(newOrderSupplySequnce);
+        }
+        [HttpPut]
+        public IActionResult Update(UpdateOrderSupplyRequest request) 
+        {
+           var update =  _service.UpdateOrderSupply(request);
+            if (update == "unsuccessful update")
+                return BadRequest();
+            return Ok(update);
         }
     }
 }

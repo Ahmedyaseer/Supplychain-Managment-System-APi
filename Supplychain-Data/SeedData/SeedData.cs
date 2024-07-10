@@ -93,36 +93,6 @@ namespace Supplychain_Data.SeedData
                         new Item { Code = "ASJDJBB", Description = "Dummy", MeasuringUnit = "KM", Name = "Item2" },
                         new Item { Code = "ASJDJBB", Description = "Dummy", MeasuringUnit = "KM", Name = "Item3" },
                         new Item { Code = "ASJDJBB", Description = "Dummy", MeasuringUnit = "KM", Name = "Item4" },
-                        new Item { Code = "ASJDJBB", Description = "Dummy", MeasuringUnit = "KM", Name = "Item5" },
-                        new Item { Code = "ASJDJBB", Description = "Dummy", MeasuringUnit = "KM", Name = "Item6" },
-                        new Item { Code = "ASJDJBB", Description = "Dummy", MeasuringUnit = "KM", Name = "Item7" },
-                        new Item { Code = "ASJDJBB", Description = "Dummy", MeasuringUnit = "KM", Name = "Item8" },
-                        new Item { Code = "ASJDJBB", Description = "Dummy", MeasuringUnit = "KM", Name = "Item9" },
-                    });
-
-                    context.SaveChanges();
-                }
-
-                if (!context.WarehouseItems.Any())
-                {
-                    context.WarehouseItems.AddRange(new List<WarehouseItem>
-                    {
-                        new WarehouseItem { WarehouseId = context.Warehouse.First(w => w.Name == "Warehouse1").Id, ItemId = context.Items.First(i => i.Name == "Item1").Id },
-                        new WarehouseItem { WarehouseId = context.Warehouse.First(w => w.Name == "Warehouse1").Id, ItemId = context.Items.First(i => i.Name == "Item2").Id },
-                        new WarehouseItem { WarehouseId = context.Warehouse.First(w => w.Name == "Warehouse1").Id, ItemId = context.Items.First(i => i.Name == "Item3").Id },
-                        new WarehouseItem { WarehouseId = context.Warehouse.First(w => w.Name == "Warehouse1").Id, ItemId = context.Items.First(i => i.Name == "Item4").Id },
-                        new WarehouseItem { WarehouseId = context.Warehouse.First(w => w.Name == "Warehouse2").Id, ItemId = context.Items.First(i => i.Name == "Item1").Id },
-                        new WarehouseItem { WarehouseId = context.Warehouse.First(w => w.Name == "Warehouse2").Id, ItemId = context.Items.First(i => i.Name == "Item2").Id },
-                        new WarehouseItem { WarehouseId = context.Warehouse.First(w => w.Name == "Warehouse2").Id, ItemId = context.Items.First(i => i.Name == "Item3").Id },
-                        new WarehouseItem { WarehouseId = context.Warehouse.First(w => w.Name == "Warehouse2").Id, ItemId = context.Items.First(i => i.Name == "Item4").Id },
-                        new WarehouseItem { WarehouseId = context.Warehouse.First(w => w.Name == "Warehouse3").Id, ItemId = context.Items.First(i => i.Name == "Item1").Id },
-                        new WarehouseItem { WarehouseId = context.Warehouse.First(w => w.Name == "Warehouse3").Id, ItemId = context.Items.First(i => i.Name == "Item2").Id },
-                        new WarehouseItem { WarehouseId = context.Warehouse.First(w => w.Name == "Warehouse3").Id, ItemId = context.Items.First(i => i.Name == "Item3").Id },
-                        new WarehouseItem { WarehouseId = context.Warehouse.First(w => w.Name == "Warehouse3").Id, ItemId = context.Items.First(i => i.Name == "Item4").Id },
-                        new WarehouseItem { WarehouseId = context.Warehouse.First(w => w.Name == "Warehouse4").Id, ItemId = context.Items.First(i => i.Name == "Item1").Id },
-                        new WarehouseItem { WarehouseId = context.Warehouse.First(w => w.Name == "Warehouse4").Id, ItemId = context.Items.First(i => i.Name == "Item2").Id },
-                        new WarehouseItem { WarehouseId = context.Warehouse.First(w => w.Name == "Warehouse4").Id, ItemId = context.Items.First(i => i.Name == "Item3").Id },
-                        new WarehouseItem { WarehouseId = context.Warehouse.First(w => w.Name == "Warehouse4").Id, ItemId = context.Items.First(i => i.Name == "Item4").Id },
                     });
 
                     context.SaveChanges();
