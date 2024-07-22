@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Supplychain_Core.ItemService;
 using Supplychain_Core.Requests;
+using Supplychain_Core.Services.ItemService;
 
 namespace SupplychainApi.Controllers
 {

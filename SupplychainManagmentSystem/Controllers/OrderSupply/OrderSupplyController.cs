@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Supplychain_Core.OrderSupplyService;
 using Supplychain_Core.Requests;
+using Supplychain_Core.Services.OrderSupplyService;
 
 namespace Supplychain_Api.Controllers.OrderSupply
 {

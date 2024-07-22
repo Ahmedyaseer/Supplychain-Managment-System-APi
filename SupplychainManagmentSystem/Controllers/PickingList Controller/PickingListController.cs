@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Supplychain_Core.PickingListService;
 using Supplychain_Core.Requests;
+using Supplychain_Core.Services.PickingListService;
 
 namespace Supplychain_Api.Controllers.PickingList_Controller
 {

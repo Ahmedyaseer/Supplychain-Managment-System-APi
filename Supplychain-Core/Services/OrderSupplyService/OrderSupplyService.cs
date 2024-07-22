@@ -3,7 +3,7 @@ using Supplychain_Core.Requests;
 using Supplychain_Data.Models;
 using Supplychain_Data.SystemContext;
 
-namespace Supplychain_Core.OrderSupplyService
+namespace Supplychain_Core.Services.OrderSupplyService
 {
     public class OrderSupplyService : IOrderSupplyService
     {
@@ -37,15 +37,15 @@ namespace Supplychain_Core.OrderSupplyService
                 OrderSupplyDate = request.OrderSupplyTime,
                 Sequence = GenerateRandomSequence(),
                 OrderSupplyItems = orderItem
-             
-                
+
+
             };
             _context.OrderSupply.Add(newOrderSupply);
             _context.OrderSupplyItems.AddRange(orderItem);
 
             foreach (var item in request.Items)
             {
-               
+
                 var currentWarehouseItem = _context.WarehouseItems
                     .FirstOrDefault(r => r.WarehouseId == request.WarehouseId
                     && r.ItemId == item.ItemId);
@@ -59,7 +59,7 @@ namespace Supplychain_Core.OrderSupplyService
                     };
                     _context.WarehouseItems.Add(newWarehouseItem);
                 }
-                else 
+                else
                 {
                     currentWarehouseItem.Quantity += item.Quantity;
                     _context.WarehouseItems.Update(currentWarehouseItem);
@@ -88,30 +88,30 @@ namespace Supplychain_Core.OrderSupplyService
             var orderSupplyWithItems = _context.OrderSupplyItems
                 .Where(osi => osi.OrderSupplyId == orderSupplyId).ToList();
 
-            var itemsIds = request.Items.Select(r=>r.ItemId).ToList();
+            var itemsIds = request.Items.Select(r => r.ItemId).ToList();
 
             var warehouseItems = _context.WarehouseItems
-                .Where(w=>w.WarehouseId == warehouseId && itemsIds.Contains(w.ItemId))
+                .Where(w => w.WarehouseId == warehouseId && itemsIds.Contains(w.ItemId))
                 .ToList();
 
-            foreach (var itemRequest in request.Items) 
+            foreach (var itemRequest in request.Items)
             {
-               var updateOrderSupply = orderSupplyWithItems.FirstOrDefault(f=>f.ItemId == itemRequest.ItemId);
+                var updateOrderSupply = orderSupplyWithItems.FirstOrDefault(f => f.ItemId == itemRequest.ItemId);
                 if (updateOrderSupply != null)
                     updateOrderSupply.Quantity = itemRequest.Quantity;
                 var updateWarehouseItems = warehouseItems.FirstOrDefault(f => f.ItemId == itemRequest.ItemId);
-                if(updateWarehouseItems != null)
+                if (updateWarehouseItems != null)
                     updateWarehouseItems.Quantity = itemRequest.Quantity;
                 _context.WarehouseItems.UpdateRange(warehouseItems);
                 _context.OrderSupplyItems.UpdateRange(orderSupplyWithItems);
-            } 
+            }
             _context.SaveChanges();
             return "updated";
         }
 
         private static string GenerateRandomSequence()
         {
-            var _random = new Random(); 
+            var _random = new Random();
             const string numbers = "0123456789";
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 

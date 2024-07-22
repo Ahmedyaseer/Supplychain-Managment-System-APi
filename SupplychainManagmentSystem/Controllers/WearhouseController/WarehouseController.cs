@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Supplychain_Core.Requests;
-using Supplychain_Core.WearhouseService;
+using Supplychain_Core.Services.WarehouseService;
 using Supplychain_Data.SystemContext;
 
 namespace SupplychainApi.Controllers

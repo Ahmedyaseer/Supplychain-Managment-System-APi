@@ -1,6 +1,6 @@
 ﻿using Supplychain_Core.Requests;
 
-namespace Supplychain_Core.PickingListService
+namespace Supplychain_Core.Services.PickingListService
 {
     public interface IPickingListService
     {

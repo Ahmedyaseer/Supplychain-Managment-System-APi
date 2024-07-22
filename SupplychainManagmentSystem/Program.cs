@@ -1,13 +1,19 @@
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Supplychain_Core.CustomerService;
-using Supplychain_Core.ItemService;
-using Supplychain_Core.OrderSupplyService;
-using Supplychain_Core.PickingListService;
-using Supplychain_Core.SupplierService;
-using Supplychain_Core.WearhouseService;
+using Microsoft.IdentityModel.Tokens;
+using Supplychain_Core.Helper;
+using Supplychain_Core.Services.AuthService;
+using Supplychain_Core.Services.CustomerService;
+using Supplychain_Core.Services.ItemService;
+using Supplychain_Core.Services.OrderSupplyService;
+using Supplychain_Core.Services.PickingListService;
+using Supplychain_Core.Services.SupplierService;
+using Supplychain_Core.Services.WarehouseService;
 using Supplychain_Data.SeedData;
 using Supplychain_Data.SystemContext;
+using System.Text;
 
 namespace SupplychainManagmentSystem
 {
@@ -18,9 +24,47 @@ namespace SupplychainManagmentSystem
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+           builder.Services.Configure<JWTSettings>(builder.Configuration.GetSection("JWTSettings"));
+            var jwtSettings = builder.Configuration.GetSection("JWTSettings").Get<JWTSettings>();
+
+
             string connectionString = builder.Configuration.GetConnectionString("Connection");
+
             builder.Services.AddDbContext<SystemDbContext>(options=>
             options.UseSqlServer(connectionString));
+
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            {
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireDigit = false;
+                
+
+            }).AddEntityFrameworkStores<SystemDbContext>();
+
+            // JWT Services Config
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            }).AddJwtBearer(o=>
+            {
+                o.SaveToken = true; // in HttpContext
+                o.TokenValidationParameters = new TokenValidationParameters
+                {
+                    SaveSigninToken = true,
+                    ValidateIssuer = true,
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidateAudience = true,
+                    ValidAudience = jwtSettings.Audience,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+                    ValidateLifetime = true,
+                };
+            });
+            
 
 
             builder.Services.AddScoped<IWarehouseService, WarehouseService>();
@@ -29,6 +73,7 @@ namespace SupplychainManagmentSystem
             builder.Services.AddScoped<ICustomerService, CustomerService>();  
             builder.Services.AddScoped<IOrderSupplyService, OrderSupplyService>();
             builder.Services.AddScoped<IPickingListService, PickingListService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -46,8 +91,9 @@ namespace SupplychainManagmentSystem
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            app.UseAuthentication();
 
+            app.UseAuthorization();
 
             app.MapControllers();
 
