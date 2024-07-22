@@ -3,7 +3,7 @@ using Supplychain_Core.Requests;
 using Supplychain_Data.Models;
 using Supplychain_Data.SystemContext;
 
-namespace Supplychain_Core.CustomerService
+namespace Supplychain_Core.Services.CustomerService
 {
     public class CustomerService : ICustomerService
     {

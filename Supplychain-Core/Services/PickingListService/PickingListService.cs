@@ -4,7 +4,7 @@ using Supplychain_Data.Models;
 using Supplychain_Data.SystemContext;
 using System.Linq;
 
-namespace Supplychain_Core.PickingListService
+namespace Supplychain_Core.Services.PickingListService
 {
     public class PickingListService : IPickingListService
     {
@@ -36,12 +36,12 @@ namespace Supplychain_Core.PickingListService
                 PickingListItems = itemsPickingList,
             };
             _context.PickingLists.Add(newPickingList);
-            _context.pickingListItems.AddRange(itemsPickingList);
+            _context.PickingListItems.AddRange(itemsPickingList);
 
-            foreach (var item in request.Items) 
+            foreach (var item in request.Items)
             {
                 var currentWarehouseAndItems = _context.WarehouseItems
-                    .FirstOrDefault(x=>x.WarehouseId == request.WarehouseId && x.ItemId == item.ItemId);
+                    .FirstOrDefault(x => x.WarehouseId == request.WarehouseId && x.ItemId == item.ItemId);
                 if (currentWarehouseAndItems == null)
                     return null;
                 currentWarehouseAndItems.Quantity -= item.Quantity;
@@ -55,37 +55,37 @@ namespace Supplychain_Core.PickingListService
         {
             var sequance = request.Sequence;
             var pickingList = _context.PickingLists
-                .FirstOrDefault(f=>f.Sequence == sequance);
+                .FirstOrDefault(f => f.Sequence == sequance);
             if (pickingList == null) return;
             var warehouseId = pickingList.WarehouseId;
-            var pickingListItems = _context.pickingListItems
+            var pickingListItems = _context.PickingListItems
                 .Where(p => p.PickingListId == pickingList.Id).ToList();
 
             var itemIds = request.ItemsSolds.Select(i => i.ItemId).ToList();
 
 
             var warehousesItems = _context.WarehouseItems
-                .Where(e=> e.WarehouseId == warehouseId && itemIds.Contains(e.ItemId)).ToList();   
-     
+                .Where(e => e.WarehouseId == warehouseId && itemIds.Contains(e.ItemId)).ToList();
+
 
             foreach (var itemRequest in request.ItemsSolds)
             {
-                var updatePickingList = pickingListItems.FirstOrDefault(p=>p.ItemId == itemRequest.ItemId);
+                var updatePickingList = pickingListItems.FirstOrDefault(p => p.ItemId == itemRequest.ItemId);
                 if (updatePickingList != null)
                 {
                     updatePickingList.Quantity = itemRequest.Quantity;
                 }
 
                 var updateWarehouseItem = warehousesItems.FirstOrDefault(p => p.ItemId == itemRequest.ItemId);
-                if(updateWarehouseItem != null)
+                if (updateWarehouseItem != null)
                 {
                     updateWarehouseItem.Quantity -= itemRequest.Quantity;
                 }
 
                 _context.WarehouseItems.UpdateRange(warehousesItems);
-                _context.pickingListItems.UpdateRange(pickingListItems);    
+                _context.PickingListItems.UpdateRange(pickingListItems);
             }
-            _context.SaveChanges(); 
+            _context.SaveChanges();
 
         }
         private static string GenerateRandomSequence()

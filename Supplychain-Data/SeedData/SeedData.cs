@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Supplychain_Data.Models;
 using Supplychain_Data.SystemContext;
@@ -95,6 +96,17 @@ namespace Supplychain_Data.SeedData
                         new Item { Code = "ASJDJBB", Description = "Dummy", MeasuringUnit = "KM", Name = "Item4" },
                     });
 
+                    context.SaveChanges();
+                }
+                if (!context.Roles.Any())
+                {
+                    context.Roles.AddRange(new List<IdentityRole>
+                    {
+                        new IdentityRole { Id = Guid.NewGuid().ToString(), Name = "Administrator" , NormalizedName = "Admin" , ConcurrencyStamp =  Guid.NewGuid().ToString() },
+                        new IdentityRole { Id = Guid.NewGuid().ToString(), Name = "Warehouse Supervisor" , NormalizedName = "Supervisor" , ConcurrencyStamp =  Guid.NewGuid().ToString() },
+                        new IdentityRole { Id = Guid.NewGuid().ToString(), Name = "Customer" , NormalizedName = "Customer" , ConcurrencyStamp =  Guid.NewGuid().ToString() },
+                        new IdentityRole { Id = Guid.NewGuid().ToString(), Name = "Supplier" , NormalizedName = "Supplier" , ConcurrencyStamp =  Guid.NewGuid().ToString() }, 
+                    });
                     context.SaveChanges();
                 }
             }

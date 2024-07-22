@@ -4,7 +4,7 @@ using Supplychain_Core.Response;
 using Supplychain_Data.Models;
 using Supplychain_Data.SystemContext;
 
-namespace Supplychain_Core.WearhouseService
+namespace Supplychain_Core.Services.WarehouseService
 {
     public class WarehouseService : IWarehouseService
     {
@@ -22,29 +22,29 @@ namespace Supplychain_Core.WearhouseService
                 Email = request.Email,
                 Name = request.Name,
             };
-            
+
             await _context.Warehouse.AddAsync(response);
             await _context.SaveChangesAsync();
-       
+
         }
 
-        public List<warehouseResponse> GetWarehouses() 
+        public List<warehouseResponse> GetWarehouses()
         {
             var response = _context.Warehouse
                 .AsNoTracking()
-                .Select(w=> new warehouseResponse
-            {
-                Email = w.Email,
-                Name = w.Name,
-                Location = w.Location,
-            })
+                .Select(w => new warehouseResponse
+                {
+                    Email = w.Email,
+                    Name = w.Name,
+                    Location = w.Location,
+                })
                 .ToList();
 
-            
+
             return response;
         }
 
-        public async Task<warehouseResponse> GetWarehouseByIdAsync(int id) 
+        public async Task<warehouseResponse> GetWarehouseByIdAsync(int id)
         {
             var warehouse = await _context.Warehouse.
                 AsNoTracking().
@@ -52,19 +52,19 @@ namespace Supplychain_Core.WearhouseService
             if (warehouse == null)
                 return null;
             return new warehouseResponse(warehouse);
-                
+
         }
 
-        public async Task<Warehouse> UpdateWarehouseAsync (int id, WarehouseRequest request)
+        public async Task<Warehouse> UpdateWarehouseAsync(int id, WarehouseRequest request)
         {
             var existingWarehouse = await _context.Warehouse
-                .FirstOrDefaultAsync(w=>w.Id==id);
+                .FirstOrDefaultAsync(w => w.Id == id);
             if (existingWarehouse == null)
                 return null;
             existingWarehouse.Name = request.Name;
             existingWarehouse.Location = request.Location;
             existingWarehouse.Email = request.Email;
-             _context.Update(existingWarehouse);
+            _context.Update(existingWarehouse);
             await _context.SaveChangesAsync();
             return existingWarehouse;
         }

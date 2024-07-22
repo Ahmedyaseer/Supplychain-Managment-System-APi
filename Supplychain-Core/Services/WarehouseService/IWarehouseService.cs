@@ -2,7 +2,7 @@
 using Supplychain_Core.Response;
 using Supplychain_Data.Models;
 
-namespace Supplychain_Core.WearhouseService
+namespace Supplychain_Core.Services.WarehouseService
 {
     public interface IWarehouseService
     {

@@ -1,6 +1,6 @@
 ﻿using Supplychain_Core.Requests;
 
-namespace Supplychain_Core.OrderSupplyService
+namespace Supplychain_Core.Services.OrderSupplyService
 {
     public interface IOrderSupplyService
     {

@@ -1,13 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Supplychain_Data.Models;
 
 namespace Supplychain_Data.SystemContext
 {
-    public class SystemDbContext :DbContext
+    public class SystemDbContext :IdentityDbContext
     {
         public SystemDbContext(DbContextOptions<SystemDbContext> options) :base(options)
-        {}
+        {
 
+        }
         public DbSet<Warehouse> Warehouse { get; set; }
         public DbSet<Employee> Employees {  get; set; } 
         public DbSet<Item> Items { get; set; }
@@ -17,7 +19,7 @@ namespace Supplychain_Data.SystemContext
         public DbSet<OrderSupply> OrderSupply { get; set; }
         public DbSet<OrderSupplyItems> OrderSupplyItems { get; set; }
         public DbSet<PickingList> PickingLists { get; set; }
-        public DbSet<PickingListItems> pickingListItems { get; set; }
+        public DbSet<PickingListItems> PickingListItems { get; set; }
 
 
 
